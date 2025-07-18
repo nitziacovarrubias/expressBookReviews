@@ -38,7 +38,7 @@ regd_users.post("/login", (req,res) => {
             token, username
         };
 
-        return res.status(200).json({message: "User successfully logged in"})
+        return res.status(200).json({message: "User successfully logged in"});
     }
     else {
         return res.status(208).json({message: "Invalid Login. Check username and password"});
@@ -47,7 +47,19 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
+    const auth = req.body.auth;
+    const review = req.body.review;
+    const isbn = req.params.isbn;
+
+    if(books[isbn]) {
+        books[isbn].reviews = {
+            ...books[isbn].reviews,
+            [auth]: review
+        };
     
+        return res.status(200).json({message: "Review successfully added"});
+    }
+    return res.status(404).json({message: "Book not found"});
 });
 
 module.exports.authenticated = regd_users;
